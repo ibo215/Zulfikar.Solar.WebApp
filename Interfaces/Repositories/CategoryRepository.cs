@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Zulfikar.Solar.API.Data;
+using Zulfikar.Solar.API.Interfaces.Repositories;
 using Zulfikar.Solar.API.Models;
 
-namespace Zulfikar.Solar.API.Interfaces.Repositories
+namespace Zulfikar.Solar.API.Repositories // تأكد من المسار الصحيح
 {
     public class CategoryRepository : ICategoryRepository
     {
@@ -13,23 +14,35 @@ namespace Zulfikar.Solar.API.Interfaces.Repositories
             _context = context;
         }
 
-        public async Task<List<Category>> GetAllAsync() =>
-            await _context.Categories.ToListAsync();
+        public async Task<List<Category>> GetAllAsync()
+        {
+            return await _context.Categories.ToListAsync();
+        }
 
-        public async Task<Category?> GetByIdAsync(int id) =>
-            await _context.Categories.FindAsync(id);
+        public async Task<Category?> GetByIdAsync(int id)
+        {
+            return await _context.Categories.FirstOrDefaultAsync(c => c.Id == id);
+        }
 
-        public async Task AddAsync(Category category) =>
+        public async Task AddAsync(Category category)
+        {
             await _context.Categories.AddAsync(category);
+        }
 
-        public void Update(Category category) =>
+        public void Update(Category category)
+        {
             _context.Categories.Update(category);
+        }
 
-        public void Delete(Category category) =>
+        public void Delete(Category category)
+        {
             _context.Categories.Remove(category);
+        }
 
-        public async Task SaveChangesAsync() =>
-            await _context.SaveChangesAsync();
+        public async Task<bool> SaveChangesAsync()
+        {
+            // هذا السطر يقوم بتحويل عدد الصفوف المتأثرة إلى bool
+            return await _context.SaveChangesAsync() > 0; // <--- تأكد من وجود > 0
+        }
     }
-
 }

@@ -9,6 +9,6 @@ namespace Zulfikar.Solar.API.Interfaces.Repositories
         Task AddAsync(Category category);
         void Update(Category category);
         void Delete(Category category);
-        Task SaveChangesAsync();
+        Task<bool> SaveChangesAsync(); // <--- تأكد من أن هذه هي bool
     }
 }

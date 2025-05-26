@@ -2,6 +2,8 @@
 using Zulfikar.Solar.API.Data;
 using Zulfikar.Solar.API.Interfaces.Repositories;
 using Zulfikar.Solar.API.Interfaces.Services;
+using Zulfikar.Solar.API.Repositories;
+using Zulfikar.Solar.API.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);

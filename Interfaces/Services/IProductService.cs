@@ -6,9 +6,8 @@ namespace Zulfikar.Solar.API.Interfaces.Services
     {
         Task<List<PreviewProductDto>> GetAllAsync();
         Task<PreviewProductDto?> GetByIdAsync(int id);
-        Task<bool> CreateAsync(CreateProductDto dto);
-        Task<bool> UpdateAsync(int id, UpdateProductDto dto);
+        Task<PreviewProductDto?> CreateAsync(CreateProductDto productDto); // <--- تم تغيير نوع الإرجاع هنا
+        Task<bool> UpdateAsync(int id, UpdateProductDto productDto);
         Task<bool> DeleteAsync(int id);
     }
-
-}
+}   

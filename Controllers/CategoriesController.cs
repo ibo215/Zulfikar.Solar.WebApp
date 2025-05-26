@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Zulfikar.API.DTOs;
+using Zulfikar.API.DTOs; // لـ PreviewCategoryDto
 using Zulfikar.Solar.API.DTOs.CategoryDTO;
 using Zulfikar.Solar.API.Interfaces.Services;
 
@@ -31,8 +31,10 @@ namespace Zulfikar.Solar.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateCategoryDto dto)
         {
-            await _service.AddAsync(dto);
-            return Ok();
+            // قم بتعديل السيرفيس ليرجع الـ DTO المنشأ (مع الـ ID)
+            var createdCategoryDto = await _service.AddAsync(dto);
+            // إذا كانت العملية ناجحة، ارجع 201 Created مع رابط للمورد المنشأ
+            return CreatedAtAction(nameof(Get), new { id = createdCategoryDto.Id }, createdCategoryDto); // <--- تم التعديل هنا
         }
 
         [HttpPut("{id}")]
@@ -49,5 +51,4 @@ namespace Zulfikar.Solar.API.Controllers
             return deleted ? Ok() : NotFound();
         }
     }
-
 }

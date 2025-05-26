@@ -3,10 +3,15 @@
     public class PreviewProductDto
     {
         public int Id { get; set; }
-        public string Name { get; set; } = string.Empty;
-        public string? Description { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; } // لإظهار الوصف في قائمة المنتجات
+        public string ImageUrl { get; set; }
         public decimal Price { get; set; }
-        public int CategoryId { get; set; }
-        public string? CategoryName { get; set; } 
+        public string CategoryName { get; set; } // لعرض اسم التصنيف
+
+        // الخصائص الجديدة للعرض
+        public bool IsActive { get; set; }
+        public DateTime DateAdded { get; set; }
+        public DateTime? LastModified { get; set; }
     }
 }

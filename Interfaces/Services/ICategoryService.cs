@@ -1,5 +1,5 @@
-﻿using Zulfikar.API.DTOs;
-using Zulfikar.Solar.API.DTOs.CategoryDTO;
+﻿using Zulfikar.Solar.API.DTOs.CategoryDTO;
+using Zulfikar.API.DTOs; // لـ PreviewCategoryDto
 
 namespace Zulfikar.Solar.API.Interfaces.Services
 {
@@ -7,9 +7,8 @@ namespace Zulfikar.Solar.API.Interfaces.Services
     {
         Task<List<PreviewCategoryDto>> GetAllAsync();
         Task<UpdateCategoryDto?> GetByIdAsync(int id);
-        Task AddAsync(CreateCategoryDto dto);
-        Task<bool> UpdateAsync(int id, UpdateCategoryDto dto);
+        Task<PreviewCategoryDto> AddAsync(CreateCategoryDto categoryDto); // <--- تم تغيير نوع الإرجاع هنا
+        Task<bool> UpdateAsync(int id, UpdateCategoryDto categoryDto);
         Task<bool> DeleteAsync(int id);
     }
-
 }

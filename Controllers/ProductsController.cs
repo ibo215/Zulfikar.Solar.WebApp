@@ -34,8 +34,16 @@ namespace Zulfikar.Solar.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateProductDto dto)
         {
-            var result = await _service.CreateAsync(dto);
-            return result ? Ok() : BadRequest();
+            // قم بتعديل السيرفيس ليرجع الـ DTO المنشأ (مع الـ ID)
+            var createdProductDto = await _service.CreateAsync(dto); // <--- تم التعديل هنا
+
+            // تحقق من أن createdProductDto ليس null قبل استخدامه
+            if (createdProductDto == null)
+            {
+                return BadRequest("فشل في إنشاء المنتج."); // يمكن تحسين رسالة الخطأ
+            }
+
+            return CreatedAtAction(nameof(GetById), new { id = createdProductDto.Id }, createdProductDto); // <--- تم التعديل هنا
         }
 
         [HttpPut("{id}")]
@@ -52,5 +60,4 @@ namespace Zulfikar.Solar.API.Controllers
             return result ? Ok() : NotFound();
         }
     }
-
 }
