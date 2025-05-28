@@ -1,13 +1,15 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Zulfikar.API.DTOs; // لـ PreviewCategoryDto
+using Zulfikar.API.DTOs;
 using Zulfikar.Solar.API.DTOs.CategoryDTO;
 using Zulfikar.Solar.API.Interfaces.Services;
+using Microsoft.AspNetCore.Authorization; // <--- أضف هذا الـ using
 
 namespace Zulfikar.Solar.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    // [Authorize] // <--- يمكن وضعها هنا لحماية جميع الـ actions في هذا الـ Controller
     public class CategoriesController : ControllerBase
     {
         private readonly ICategoryService _service;
@@ -18,10 +20,12 @@ namespace Zulfikar.Solar.API.Controllers
         }
 
         [HttpGet]
+        // [AllowAnonymous] // إذا كان Controller محميًا، تسمح بالوصول لهذه الـ action
         public async Task<ActionResult<List<PreviewCategoryDto>>> GetAll() =>
             Ok(await _service.GetAllAsync());
 
         [HttpGet("{id}")]
+        // [AllowAnonymous] // إذا كان Controller محميًا، تسمح بالوصول لهذه الـ action
         public async Task<ActionResult<UpdateCategoryDto>> Get(int id)
         {
             var result = await _service.GetByIdAsync(id);
@@ -29,15 +33,15 @@ namespace Zulfikar.Solar.API.Controllers
         }
 
         [HttpPost]
+        [Authorize] // <--- حماية هذا الـ action (إنشاء تصنيف)
         public async Task<IActionResult> Create(CreateCategoryDto dto)
         {
-            // قم بتعديل السيرفيس ليرجع الـ DTO المنشأ (مع الـ ID)
             var createdCategoryDto = await _service.AddAsync(dto);
-            // إذا كانت العملية ناجحة، ارجع 201 Created مع رابط للمورد المنشأ
-            return CreatedAtAction(nameof(Get), new { id = createdCategoryDto.Id }, createdCategoryDto); // <--- تم التعديل هنا
+            return CreatedAtAction(nameof(Get), new { id = createdCategoryDto.Id }, createdCategoryDto);
         }
 
         [HttpPut("{id}")]
+        [Authorize] // <--- حماية هذا الـ action (تحديث تصنيف)
         public async Task<IActionResult> Update(int id, UpdateCategoryDto dto)
         {
             var updated = await _service.UpdateAsync(id, dto);
@@ -45,6 +49,7 @@ namespace Zulfikar.Solar.API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize] // <--- حماية هذا الـ action (حذف تصنيف)
         public async Task<IActionResult> Delete(int id)
         {
             var deleted = await _service.DeleteAsync(id);

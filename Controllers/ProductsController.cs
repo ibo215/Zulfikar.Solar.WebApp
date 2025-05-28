@@ -2,11 +2,13 @@
 using Microsoft.AspNetCore.Mvc;
 using Zulfikar.Solar.API.DTOs.ProductDTO;
 using Zulfikar.Solar.API.Interfaces.Services;
+using Microsoft.AspNetCore.Authorization; // <--- أضف هذا الـ using
 
 namespace Zulfikar.Solar.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    // [Authorize] // <--- يمكن وضعها هنا لحماية جميع الـ actions في هذا الـ Controller
     public class ProductsController : ControllerBase
     {
         private readonly IProductService _service;
@@ -17,6 +19,7 @@ namespace Zulfikar.Solar.API.Controllers
         }
 
         [HttpGet]
+        // [AllowAnonymous] // إذا كان Controller محميًا، تسمح بالوصول لهذه الـ action
         public async Task<IActionResult> GetAll()
         {
             var products = await _service.GetAllAsync();
@@ -24,6 +27,7 @@ namespace Zulfikar.Solar.API.Controllers
         }
 
         [HttpGet("{id}")]
+        // [AllowAnonymous] // إذا كان Controller محميًا، تسمح بالوصول لهذه الـ action
         public async Task<IActionResult> GetById(int id)
         {
             var product = await _service.GetByIdAsync(id);
@@ -32,21 +36,19 @@ namespace Zulfikar.Solar.API.Controllers
         }
 
         [HttpPost]
+        [Authorize] // <--- حماية هذا الـ action (إنشاء منتج)
         public async Task<IActionResult> Create(CreateProductDto dto)
         {
-            // قم بتعديل السيرفيس ليرجع الـ DTO المنشأ (مع الـ ID)
-            var createdProductDto = await _service.CreateAsync(dto); // <--- تم التعديل هنا
-
-            // تحقق من أن createdProductDto ليس null قبل استخدامه
+            var createdProductDto = await _service.CreateAsync(dto);
             if (createdProductDto == null)
             {
-                return BadRequest("فشل في إنشاء المنتج."); // يمكن تحسين رسالة الخطأ
+                return BadRequest("فشل في إنشاء المنتج.");
             }
-
-            return CreatedAtAction(nameof(GetById), new { id = createdProductDto.Id }, createdProductDto); // <--- تم التعديل هنا
+            return CreatedAtAction(nameof(GetById), new { id = createdProductDto.Id }, createdProductDto);
         }
 
         [HttpPut("{id}")]
+        [Authorize] // <--- حماية هذا الـ action (تحديث منتج)
         public async Task<IActionResult> Update(int id, UpdateProductDto dto)
         {
             var result = await _service.UpdateAsync(id, dto);
@@ -54,6 +56,7 @@ namespace Zulfikar.Solar.API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize] // <--- حماية هذا الـ action (حذف منتج)
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _service.DeleteAsync(id);
